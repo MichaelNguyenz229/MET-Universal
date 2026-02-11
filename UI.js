@@ -44,9 +44,18 @@ function createMasterTemplate() {
     template.setColumnWidth(5, 150); // Category
     template.setColumnWidth(6, 120); // Bank
     
-    // 1. Define the Schema starting at B2
-    const headers = [["Date", "Description", "Amount", "Category", "Bank", "Confidence"]];
-    const headerRange = template.getRange("B2:G2");
+    // Update headers to include Latency
+    const headers = [["Date", "Description", "Amount", "Category", "Bank", "Confidence", "Tokens", "Latency"]];
+
+    // Update range to 1 row, 8 columns (B through I)
+    template.getRange(2, 2, 1, 8).setValues(headers);
+
+    // Update header styling to cover I2
+    template.getRange("B2:I2")
+    .setBackground("#3498db")
+    .setFontColor("#ffffff")
+    .setFontWeight("bold");
+    const headerRange = template.getRange("B2:I2");
     headerRange.setValues(headers);
 
     // 2. Header Styling: Light Blue background, Bold White text
@@ -63,7 +72,7 @@ function createMasterTemplate() {
     
     // 4. Alternating Row Colors (B3 downwards)
     // We use a Conditional Format rule so it grows with your data
-    const dataRange = template.getRange("B3:G1000");
+    const dataRange = template.getRange("B3:I1000");
     const rule = SpreadsheetApp.newConditionalFormatRule()
       .whenFormulaSatisfied("=ISODD(ROW())")
       .setBackground("#f4f4f4") // Light Grey for alternating rows
@@ -98,7 +107,7 @@ function resetActiveSheet() {
 
   // 1. Target B3 to G (Everything below the header)
   // We use clearContent() so the background colors (zebra stripes) stay!
-  const dataRange = sheet.getRange(3, 2, lastRow - 2, 6);
+  const dataRange = sheet.getRange(3, 2, lastRow - 2, 8);
   dataRange.clearContent();
   
   // 2. Optional: If you want to delete the actual rows to reset the scroll bar

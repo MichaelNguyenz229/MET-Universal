@@ -1,0 +1,4 @@
+.clasp.json
+node_modules/
+creds.json
+# If you saved your API Key in a local file, add it here!

@@ -119,3 +119,47 @@ function getSpecificPDF(fileName) {
   
   return files.hasNext() ? files.next() : null;
 }
+
+
+/**
+ * DRIVE MODULE: PDF Pre-processor
+ */
+
+async function getTrimmedPDFBlob(file) {
+  try {
+    const blob = file.getBlob();
+    const pdf = PDFApp.setPDFBlob(blob);
+    
+    // 1. Get metadata and log it to solve the mystery
+    const metadata = await pdf.getMetadata();
+    console.log("DEBUG: Raw Metadata Type:", typeof metadata);
+    console.log("DEBUG: Raw Metadata Content:", JSON.stringify(metadata));
+
+    // Support both object and string returns
+    const metaObj = (typeof metadata === 'string') ? JSON.parse(metadata) : metadata;
+    const pageCount = metaObj.pageCount || metaObj.numberOfPages || 0;
+    
+    console.log(`DEBUG: Detected Page Count: ${pageCount}`);
+
+    let pagesToKeep = [];
+    // If it's 4 pages, we skip 1, 2, and 4. We keep page 3.
+    if (pageCount >= 3) {
+      for (let i = 3; i < pageCount; i++) {
+        pagesToKeep.push(i);
+      }
+    }
+
+    if (pagesToKeep.length > 0) {
+      console.log(`Trimming successful. Keeping pages: ${pagesToKeep.join(",")}`);
+      const exported = await pdf.exportPages(pagesToKeep);
+      return (exported && typeof exported.getBlob === 'function') ? exported.getBlob() : exported;
+    } else {
+      console.log(`No pages to trim for a ${pageCount}-page PDF. Using original.`);
+      return blob;
+    }
+    
+  } catch (err) {
+    console.error("Trimming failed, using original: " + err);
+    return file.getBlob();
+  }
+}

@@ -1,5 +1,3 @@
-
-
 function createProjectFolders() {
   const ui = SpreadsheetApp.getUi();
   const ss = SpreadsheetApp.getActiveSpreadsheet(); 
