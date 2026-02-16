@@ -111,3 +111,54 @@ function writeTransactionsToSheet(transactions, tokens, latency, fileName) {
   
   console.log(`Processed ${fileName}: ${tokens} tokens, ${latency}s`);
 }
+
+/**
+ * Specialized mini-call for the Auto-Grader.
+ * Pulls the API key directly from Script Properties.
+ */
+async function callGeminiForCategory(description, amount) {
+  // Use the same logic you use in callGeminiAPI
+  const apiKey = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
+  
+  if (!apiKey) {
+    throw new Error("GEMINI_API_KEY not found in Script Properties.");
+  }
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+  const prompt = `Categorize this transaction. Return ONLY the category name from this list: [Groceries, Gas, Restaurants, Leisure, Subscriptions, Misc].
+  
+  Description: ${description}
+  Amount: $${amount}`;
+
+  const payload = {
+    "contents": [{ "parts": [{ "text": prompt }] }],
+    "generationConfig": { 
+      "responseMimeType": "text/plain", // Ensuring simple text return
+      "temperature": 0.1 
+    }
+  };
+
+  const options = {
+    "method": "post",
+    "contentType": "application/json",
+    "payload": JSON.stringify(payload),
+    "muteHttpExceptions": true
+  };
+
+  try {
+    const response = UrlFetchApp.fetch(url, options);
+    const json = JSON.parse(response.getContentText());
+    
+    // Defensive check for the API response structure
+    if (json.candidates && json.candidates[0].content.parts[0].text) {
+      return json.candidates[0].content.parts[0].text.trim();
+    } else {
+      console.warn("Gemini returned unexpected format: ", json);
+      return "Format Error";
+    }
+  } catch (e) {
+    console.error("Gemini Guess Failed: " + e.message);
+    return "Network Error";
+  }
+}

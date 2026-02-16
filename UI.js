@@ -15,6 +15,8 @@ function onOpen() {
  * UI MODULE: The Interior Designer.
  */
 
+
+
 /**
  * UI MODULE: The Interior Designer
  * Bootstraps the professional template with Column A and Row 1 as "borders".
@@ -92,6 +94,8 @@ function createMasterTemplate() {
     console.log("Master Template Styled: B2 Headers, A/1 Borders, Alternating Rows.");
   }
 }
+
+
 
 /**
  * UI MODULE: Utility
