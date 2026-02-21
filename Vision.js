@@ -71,7 +71,11 @@ async function callGeminiAPI(trimmedBlob) {
   const payload = {
     "contents": [{
       "parts": [
-        { "text": "JSON array: [{date, description, amount, category, bank, confidence}]. Categories: [Groceries, Gas, Restaurants, Leisure, Subscriptions, Misc]. Exclude 'AUTOPAY'." },
+        { "text": `Return a JSON array of transactions: [{date, description, amount, category, bank, confidence}].
+            Categories: [Groceries, Gas, Restaurants, Leisure, Subscriptions, Misc].
+            Exclude any AUTOPAY or automatic payment transactions entirely.
+            Confidence (0.0 to 1.0): how certain you are in the category match. 
+            Be conservative — only use values above 0.8 for clear, unambiguous matches.`},
         { "inline_data": { "mime_type": "application/pdf", "data": base64Data } }
       ]
     }],
