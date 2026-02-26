@@ -1,4 +1,4 @@
-# MET-Universal 💳
+# MET-Universal 
 
 > A cost-optimized, multimodal AI pipeline for extracting structured financial data from bank PDFs using Gemini 2.0 Flash.
 
@@ -82,11 +82,11 @@ A foundational regression suite with an `assert`-style framework that validates 
 - **TC-02** — Negative constraint adherence: verifies that AUTOPAY transactions are never present in Gemini's output, catching prompt regressions
 
 ```
-🚀 STARTING AUTOMATED REGRESSION SUITE...
-✅ PASS: TC-01: Trimmer returned a valid Blob instead of crashing
-❌ FAIL: TC-02: Output contains forbidden AUTOPAY transactions
-📊 Results: 1 / 2 Passed.
-🔴 STATUS: DEPLOYMENT HALTED. Fix failing tests.
+ STARTING AUTOMATED REGRESSION SUITE...
+ PASS: TC-01: Trimmer returned a valid Blob instead of crashing
+ FAIL: TC-02: Output contains forbidden AUTOPAY transactions
+ Results: 1 / 2 Passed.
+ STATUS: DEPLOYMENT HALTED. Fix failing tests.
 ```
 
 ---
